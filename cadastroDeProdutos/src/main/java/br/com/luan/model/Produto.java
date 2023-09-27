@@ -16,6 +16,10 @@ public class Produto {
 	private int quantidade;
 	private double preco;
 	
+	public Produto() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	public Produto(String nomeProduto, int quantidade, double preco) {
 		super();
