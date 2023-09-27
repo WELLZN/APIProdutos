@@ -4,10 +4,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import br.com.luan.model.Produto;
@@ -42,9 +46,23 @@ public class ProdutoController {
 				.map(objetoGravado -> ResponseEntity.ok().body(objetoGravado))
 				.orElse(ResponseEntity.notFound().build());
 	}
+	@PostMapping
+	public ResponseEntity<Produto> cadastrarProduto(@RequestBody Produto produto) {
+		return ResponseEntity.status(HttpStatus.CREATED)
+				.body(produtoRepository.save(produto));
+		
+	}
 	
-	
-	
-	
+	@PutMapping("/{id}")
+	public ResponseEntity<Produto> atualizarProduto(@PathVariable Long id , @RequestBody Produto produto) {
+		return produtoRepository.findById(id).map(objetoGravado -> {
+			objetoGravado.setNomeProduto(produto.getNomeProduto());
+		objetoGravado.setQuantidade(produto.getQuantidade());
+			objetoGravado.setPreco(produto.getPreco());
+			Produto produtoAtualizado = produtoRepository.save(objetoGravado);
+			return ResponseEntity.ok().body(produtoAtualizado);
+			
+		}).orElse(ResponseEntity.notFound().build());
+	}
 	
 }
